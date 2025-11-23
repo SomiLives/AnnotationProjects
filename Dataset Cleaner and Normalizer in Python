@@ -1,0 +1,54 @@
+import re
+import string
+
+def readEntireFileAndReturnText(filePathToRawDataset):
+    openedFile = open(filePathToRawDataset, "r", encoding="utf-8")
+    fileText = openedFile.read()
+    openedFile.close()
+    return fileText
+
+def splitTextIntoIndividualLines(rawTextToSplitIntoLines):
+    return rawTextToSplitIntoLines.split("\n")
+
+def convertAllTextLinesToLowercase(listOfOriginalTextLines):
+    lowerList = []
+    for textLine in listOfOriginalTextLines:
+        lowerList.append(textLine.lower())
+    return lowerList
+
+def removeExtraSpacesFromAllLines(listOfMessySpacingLines):
+    cleanedList = []
+    for messyText in listOfMessySpacingLines:
+        cleanedList.append(" ".join(messyText.split()))
+    return cleanedList
+
+def removeAllPunctuationFromTextLines(listOfTextLinesWithPunctuation):
+    finalList = []
+    punctuationTable = str.maketrans("", "", string.punctuation)
+    for textLine in listOfTextLinesWithPunctuation:
+        finalList.append(textLine.translate(punctuationTable))
+    return finalList
+
+def removeEmptyLinesFromList(listPossiblyContainingEmptyLines):
+    nonEmptyList = []
+    for textLine in listPossiblyContainingEmptyLines:
+        if textLine.strip() != "":
+            nonEmptyList.append(textLine)
+    return nonEmptyList
+
+def saveCleanedDatasetToOutputFile(listOfCleanedLines, cleanedFileOutputPath):
+    openedFile = open(cleanedFileOutputPath, "w", encoding="utf-8")
+    for line in listOfCleanedLines:
+        openedFile.write(line + "\n")
+    openedFile.close()
+
+def runFullCleaningProcessOnDataset(inputFilePath, outputFilePath):
+    rawText = readEntireFileAndReturnText(inputFilePath)
+    lineList = splitTextIntoIndividualLines(rawText)
+    lowercaseList = convertAllTextLinesToLowercase(lineList)
+    noSpaceList = removeExtraSpacesFromAllLines(lowercaseList)
+    noPunctuationList = removeAllPunctuationFromTextLines(noSpaceList)
+    noEmptyLineList = removeEmptyLinesFromList(noPunctuationList)
+    saveCleanedDatasetToOutputFile(noEmptyLineList, outputFilePath)
+
+runFullCleaningProcessOnDataset("raw_dataset.txt", "cleaned_dataset.txt")
