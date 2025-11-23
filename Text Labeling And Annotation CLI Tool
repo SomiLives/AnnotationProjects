@@ -1,0 +1,31 @@
+import json
+
+def askUserForTextInputUntilTheyTypeExit():
+    listOfAllAnnotationObjects = []
+    while True:
+        userEnteredTextToLabel = input("Enter text to label (or type EXIT): ")
+        if userEnteredTextToLabel.lower() == "exit":
+            break
+        userEnteredLabelForText = input("Enter label for this text: ")
+        annotationObject = {
+            "text": userEnteredTextToLabel,
+            "label": userEnteredLabelForText
+        }
+        listOfAllAnnotationObjects.append(annotationObject)
+    return listOfAllAnnotationObjects
+
+def saveAllAnnotationObjectsToJsonlFile(allAnnotationObjectsList, outputAnnotationFilePath):
+    openedJsonlFile = open(outputAnnotationFilePath, "w", encoding="utf-8")
+    for singleAnnotationObject in allAnnotationObjectsList:
+        openedJsonlFile.write(json.dumps(singleAnnotationObject) + "\n")
+    openedJsonlFile.close()
+
+def runMainAnnotationTool():
+    print("Simple Annotation Tool")
+    print("Type in text, choose label, create dataset.")
+    allAnnotations = askUserForTextInputUntilTheyTypeExit()
+    saveFilePath = "annotations_output.jsonl"
+    saveAllAnnotationObjectsToJsonlFile(allAnnotations, saveFilePath)
+    print("Saved to", saveFilePath)
+
+runMainAnnotationTool()
